@@ -1,10 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { DefaultButton, PrimaryButton, Stack, Link, Text } from '@fluentui/react';
+import { PrimaryButton, Stack, Text } from '@fluentui/react';
 import React, { useCallback, useState } from 'react';
 import {
-  bottomStackFooterStyle,
   buttonStyle,
   buttonWithIconStyles,
   buttonsStackTokens,
@@ -28,7 +27,7 @@ export interface EndCallProps {
 
 export const EndScreen = (props: EndCallProps): JSX.Element => {
   const leftCall = 'You left the chat';
-  const goHomePage = 'Go to homepage';
+  //const goHomePage = 'Go to homepage';
   const rejoinChat = 'Rejoin chat';
   const rejoining = 'Rejoining...';
 
@@ -57,8 +56,6 @@ export const EndScreen = (props: EndCallProps): JSX.Element => {
     }
   }, [isRejoiningThread, displayName, userId, rejoinHandler]);
 
-  const feedbackLink =
-    'https://docs.microsoft.com/answers/search.html?c=&includeChildren=&f=&type=question+OR+idea+OR+kbentry+OR+answer+OR+topic+OR+user&redirect=search%2Fsearch&sort=relevance&q=azure-communication-services';
 
   return (
     <Stack
@@ -85,17 +82,13 @@ export const EndScreen = (props: EndCallProps): JSX.Element => {
             onRenderIcon={() => <Chat20Filled className={chatIconStyle} />}
           />
 
-          <DefaultButton
+          {/* <DefaultButton
             className={buttonStyle}
             styles={buttonWithIconStyles}
             text={goHomePage}
             onClick={props.homeHandler}
-          />
+          /> */}
         </Stack>
-        <div className={bottomStackFooterStyle}>
-          <Link href={feedbackLink}>Give Feedback</Link>
-          &nbsp;on this sample app at Microsoft Q&amp;A
-        </div>
       </Stack>
     </Stack>
   );

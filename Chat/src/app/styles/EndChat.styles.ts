@@ -34,7 +34,8 @@ export const buttonStyle = mergeStyles({
   height: '2.5rem',
   width: '9.875rem',
   fontSize: '0.875rem', // 14px
-  padding: 0
+  padding: 0,
+  marginLeft: '7px'
 });
 
 export const buttonWithIconStyles: IButtonStyles = {

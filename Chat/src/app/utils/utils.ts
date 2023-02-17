@@ -7,6 +7,7 @@ export const KOALA = '🐨';
 export const OCTOPUS = '🐙';
 export const MONKEY = '🐵';
 export const FOX = '🦊';
+export const USER = '👤'
 
 export const getBackgroundColor = (avatar: string): { backgroundColor: string } => {
   switch (avatar) {
@@ -39,10 +40,14 @@ export const getBackgroundColor = (avatar: string): { backgroundColor: string } 
       return {
         backgroundColor: 'rgb(255, 231, 205)'
       };
+    case USER:
+      return {
+        backgroundColor: 'rgb(228, 229, 255)'
+      };
 
     default:
       return {
-        backgroundColor: 'rgb(255, 250, 228)'
+        backgroundColor: 'rgb(228, 229, 255)'
       };
   }
 };

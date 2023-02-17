@@ -1,39 +1,23 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { CAT, FOX, KOALA, MONKEY, MOUSE, OCTOPUS } from './utils/utils';
-import { useTheme } from '@azure/communication-react';
-import { FocusZone, FocusZoneDirection, PrimaryButton, Spinner, Stack, Text } from '@fluentui/react';
+import { CAT } from './utils/utils';
+import { Spinner, Stack } from '@fluentui/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  buttonStyle,
-  buttonWithIconStyles,
-  chatIconStyle,
   mainContainerStyle
 } from './styles/ConfigurationScreen.styles';
 import {
-  avatarListContainerStackTokens,
-  avatarListContainerStyle,
-  headerStyle,
-  labelFontStyle,
-  largeAvatarContainerStyle,
-  largeAvatarStyle,
-  leftPreviewContainerStackTokens,
-  leftPreviewContainerStyle,
-  namePreviewStyle,
   responsiveLayoutStackTokens,
   responsiveLayoutStyle,
   rightInputContainerStackTokens,
   rightInputContainerStyle,
-  smallAvatarContainerStyle,
-  smallAvatarStyle
 } from './styles/ConfigurationScreen.styles';
 
-import { Chat20Filled } from '@fluentui/react-icons';
-import { DisplayNameField } from './DisplayNameField';
+
 import { sendEmojiRequest } from './utils/setEmoji';
 import { getToken } from './utils/getToken';
-import { getExistingThreadIdFromURL } from './utils/getExistingThreadIdFromURL';
+import { getExistingThreadIdFromURL, getUserNameFromURL } from './utils/getExistingThreadIdFromURL';
 import { joinThread } from './utils/joinThread';
 import { getEndpointUrl } from './utils/getEndpointUrl';
 
@@ -53,15 +37,15 @@ const CONFIGURATIONSCREEN_SHOWING_JOIN_CHAT = 2;
 const CONFIGURATIONSCREEN_SHOWING_INVALID_THREAD = 3;
 const CONFIGURATIONSCREEN_SHOWING_SPINNER_INITIALIZE_CHAT = 4;
 
-const AVATAR_LABEL = 'Avatar';
+// const AVATAR_LABEL = 'Avatar';
 const ERROR_TEXT_THREAD_INVALID = 'Thread Id is not valid, please revisit home page to create a new thread';
-const ERROR_TEXT_THREAD_NOT_RECORDED = 'Thread id is not recorded in server';
+// const ERROR_TEXT_THREAD_NOT_RECORDED = 'Thread id is not recorded in server';
 const ERROR_TEXT_THREAD_NULL = 'Thread id is null';
 const INITIALIZE_CHAT_SPINNER_LABEL = 'Initializing chat client...';
-const JOIN_BUTTON_TEXT = 'Join chat';
+// const JOIN_BUTTON_TEXT = 'Join chat';
 const LOADING_SPINNER_LABEL = 'Loading...';
-const NAME_DEFAULT = 'Name';
-const PROFILE_LABEL = 'Your profile';
+// const NAME_DEFAULT = 'Name';
+// const PROFILE_LABEL = 'Your profile';
 
 /**
  * There are four states of ConfigurationScreen.
@@ -73,16 +57,17 @@ const PROFILE_LABEL = 'Your profile';
  * @param props
  */
 export default (props: ConfigurationScreenProps): JSX.Element => {
-  const avatarsList = [CAT, MOUSE, KOALA, OCTOPUS, MONKEY, FOX];
+  // const avatarsList = [CAT, MOUSE, KOALA, OCTOPUS, MONKEY, FOX];
   const [name, setName] = useState('');
+  // @ts-ignore
   const [emptyWarning, setEmptyWarning] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState(CAT);
+  const [selectedAvatar] = useState(CAT);
   const [configurationScreenState, setConfigurationScreenState] = useState<number>(
     CONFIGURATIONSCREEN_SHOWING_SPINNER_LOADING
   );
-
+  //@ts-ignore
   const [disableJoinChatButton, setDisableJoinChatButton] = useState<boolean>(false);
-  const theme = useTheme();
+  // const theme = useTheme();
   const { joinChatHandler, setToken, setUserId, setDisplayName, setThreadId, setEndpointUrl } = props;
 
   // Used when new user is being registered.
@@ -92,15 +77,17 @@ export default (props: ConfigurationScreenProps): JSX.Element => {
       const token = await getToken();
       const endpointUrl = await getEndpointUrl();
 
+
       if (!threadId) {
         throw new Error(ERROR_TEXT_THREAD_NULL);
       }
-
       setToken(token.token);
       setUserId(token.identity);
       setDisplayName(name);
+    
       setThreadId(threadId);
       setEndpointUrl(endpointUrl);
+
 
       await sendEmojiRequest(token.identity, selectedAvatar);
 
@@ -123,7 +110,7 @@ export default (props: ConfigurationScreenProps): JSX.Element => {
         try {
           const threadId = getExistingThreadIdFromURL();
           if (!threadId) {
-            throw new Error(ERROR_TEXT_THREAD_NOT_RECORDED);
+            //throw new Error(ERROR_TEXT_THREAD_NOT_RECORDED);
           }
         } catch (error) {
           setConfigurationScreenState(CONFIGURATIONSCREEN_SHOWING_INVALID_THREAD);
@@ -135,27 +122,38 @@ export default (props: ConfigurationScreenProps): JSX.Element => {
     }
   }, [configurationScreenState]);
 
-  const smallAvatarContainerClassName = useCallback(
-    (avatar: string) => {
-      return smallAvatarContainerStyle(avatar, selectedAvatar, theme);
-    },
-    [selectedAvatar, theme]
-  );
 
-  const validateName = (): void => {
-    if (!name) {
-      setEmptyWarning(true);
-    } else {
+  useEffect(()=>{
+    const user = getUserNameFromURL();
+    user && setName(user);
+    console.log(user)
+    setConfigurationScreenState(CONFIGURATIONSCREEN_SHOWING_SPINNER_LOADING);
+  },[])
+
+  useEffect(()=>{
+    if(name) {
+      validateName();
+    }
+
+  },[name])
+
+  // const smallAvatarContainerClassName = useCallback(
+  //   (avatar: string) => {
+  //     return smallAvatarContainerStyle(avatar, selectedAvatar, theme);
+  //   },
+  //   [selectedAvatar, theme]
+  // );
+
+  const validateName = (): void => {  
       setEmptyWarning(false);
       setDisableJoinChatButton(true);
       setConfigurationScreenState(CONFIGURATIONSCREEN_SHOWING_SPINNER_INITIALIZE_CHAT);
       setupAndJoinChatThreadWithNewUser();
-    }
   };
 
-  const onAvatarChange = (newAvatar: string): void => {
-    setSelectedAvatar(newAvatar);
-  };
+  // const onAvatarChange = (newAvatar: string): void => {
+  //   setSelectedAvatar(newAvatar);
+  // };
 
   const displaySpinner = (spinnerLabel: string): JSX.Element => {
     return <Spinner label={spinnerLabel} ariaLive="assertive" labelPosition="top" />;
@@ -171,7 +169,7 @@ export default (props: ConfigurationScreenProps): JSX.Element => {
         tokens={responsiveLayoutStackTokens}
         className={responsiveLayoutStyle}
       >
-        <Stack horizontalAlign="center" tokens={leftPreviewContainerStackTokens} className={leftPreviewContainerStyle}>
+        {/* <Stack horizontalAlign="center" tokens={leftPreviewContainerStackTokens} className={leftPreviewContainerStyle}>
           <Text role={'heading'} aria-level={1} className={headerStyle}>
             {PROFILE_LABEL}
           </Text>
@@ -181,12 +179,12 @@ export default (props: ConfigurationScreenProps): JSX.Element => {
             </div>
           </div>
           <Text className={namePreviewStyle(name !== '')}>{name !== '' ? name : NAME_DEFAULT}</Text>
-        </Stack>
+        </Stack> */}
         <Stack className={rightInputContainerStyle} tokens={rightInputContainerStackTokens}>
-          <Text id={'avatar-list-label'} className={labelFontStyle}>
+          {/* <Text id={'avatar-list-label'} className={labelFontStyle}>
             {AVATAR_LABEL}
-          </Text>
-          <FocusZone direction={FocusZoneDirection.horizontal}>
+          </Text> */}
+          {/* <FocusZone direction={FocusZoneDirection.horizontal}>
             <Stack
               horizontal
               className={avatarListContainerStyle}
@@ -207,22 +205,22 @@ export default (props: ConfigurationScreenProps): JSX.Element => {
                 </div>
               ))}
             </Stack>
-          </FocusZone>
-          <DisplayNameField
+          </FocusZone> */}
+          {/* <DisplayNameField
             setName={setName}
             setEmptyWarning={setEmptyWarning}
             validateName={validateName}
             isEmpty={emptyWarning}
-          />
+          /> */}
 
-          <PrimaryButton
+          {/* <PrimaryButton
             disabled={disableJoinChatButton}
             className={buttonStyle}
             styles={buttonWithIconStyles}
             text={JOIN_BUTTON_TEXT}
             onClick={validateName}
             onRenderIcon={() => <Chat20Filled className={chatIconStyle} />}
-          />
+          /> */}
         </Stack>
       </Stack>
     );

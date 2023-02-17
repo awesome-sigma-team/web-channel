@@ -46,7 +46,7 @@ export const ErrorScreen = (props: ErrorEndCallProps): JSX.Element => {
         </Stack>
         <div className={bottomStackFooterStyle}>
           <a href="https://github.com/Azure/Communication/issues">Give Feedback</a>
-          &nbsp;on this sample app on Github
+          &nbsp;
         </div>
       </Stack>
     </Stack>

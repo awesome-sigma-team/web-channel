@@ -5,7 +5,6 @@ import {
   IImageStyles,
   Icon,
   Image,
-  Link,
   List,
   PrimaryButton,
   Spinner,
@@ -13,7 +12,7 @@ import {
   Text,
   mergeStyles
 } from '@fluentui/react';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   buttonStyle,
   buttonWithIconStyles,
@@ -37,7 +36,7 @@ import { useTheme } from '@azure/communication-react';
 import { Chat20Filled } from '@fluentui/react-icons';
 import heroSVG from '../assets/hero.svg';
 import heroDarkModeSVG from '../assets/hero_dark.svg';
-import { getExistingThreadIdFromURL } from './utils/getExistingThreadIdFromURL';
+import { getExistingThreadIdFromURL, getUserNameFromURL } from './utils/getExistingThreadIdFromURL';
 import { createThread } from './utils/createThread';
 import { ThemeSelector } from './theming/ThemeSelector';
 import { useSwitchableFluentTheme } from './theming/SwitchableFluentThemeProvider';
@@ -63,26 +62,34 @@ const HOMESCREEN_SHOWING_LOADING_SPINNER_CREATE_THREAD = 2;
 export default (): JSX.Element => {
   const spinnerLabel = 'Creating a new chat thread...';
   const iconName = 'SkypeCircleCheck';
-  const headerTitle = 'Exceptionally simple chat app';
+  const headerTitle = 'Sigma Chat POC';
   const startChatButtonText = 'Start chat';
   const listItems = [
+    'Let our agents help you!',
     'Launch a conversation with a single click',
-    'Real-time messaging with indicators',
-    'Invite up to 250 participants',
-    'Learn more about this'
-  ];
+  ]
 
   const [homeScreenState, setHomeScreenState] = useState<number>(HOMESCREEN_SHOWING_START_CHAT_BUTTON);
   const { currentTheme } = useSwitchableFluentTheme();
 
   const imageProps = { src: currentTheme.name === 'Light' ? heroSVG.toString() : heroDarkModeSVG.toString() };
+  
+  //@ts-ignore
+  useEffect(async () => {
+    await onCreateThread();
+  },[])
 
   const onCreateThread = async (): Promise<void> => {
     const exisitedThreadId = getExistingThreadIdFromURL();
+    const userName = getUserNameFromURL();
+    const baseurl =  window.location.href.split('?')[0];
+    console.log( window.location.href.split('?')[0]);
     setHomeScreenState(HOMESCREEN_SHOWING_LOADING_SPINNER_CREATE_THREAD);
 
     if (exisitedThreadId && exisitedThreadId.length > 0) {
-      window.location.href += `?threadId=${exisitedThreadId}`;
+      console.log("old thread")
+     
+      window.location.href = baseurl + `?threadId=${exisitedThreadId}&user=${userName}`;
       return;
     }
 
@@ -91,7 +98,9 @@ export default (): JSX.Element => {
       console.error('Failed to create a thread, returned threadId is undefined or empty string');
       return;
     } else {
-      window.location.href += `?threadId=${threadId}`;
+      console.log("new thread")
+      console.log(threadId)
+      window.location.href = baseurl + `?threadId=${threadId}&user=${userName}`;
     }
   };
 
@@ -103,18 +112,7 @@ export default (): JSX.Element => {
 
   const onRenderListItem = useCallback(
     (item?: string, index?: number): JSX.Element => {
-      const listText =
-        index !== 3 ? (
-          <Text>{item}</Text>
-        ) : (
-          <Text>
-            {item}{' '}
-            <Link href="https://docs.microsoft.com/azure/communication-services/overview" aria-label={`${item} sample`}>
-              {'sample'}
-            </Link>
-          </Text>
-        );
-
+      const listText =  <Text>{item}</Text>;
       return (
         <Stack horizontal tokens={listItemStackTokens} className={listItemStyle}>
           <Icon className={mergeStyles(listIconStyle, { color: themePrimary })} iconName={iconName} />

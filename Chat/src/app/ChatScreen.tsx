@@ -17,7 +17,7 @@ import { ChatHeader } from './ChatHeader';
 import { chatCompositeContainerStyle, chatScreenContainerStyle } from './styles/ChatScreen.styles';
 import { createAutoRefreshingCredential } from './utils/credential';
 import { fetchEmojiForUser } from './utils/emojiCache';
-import { getBackgroundColor } from './utils/utils';
+import { getBackgroundColor, USER } from './utils/utils';
 import { useSwitchableFluentTheme } from './theming/SwitchableFluentThemeProvider';
 
 // These props are passed in when this component is referenced in JSX and not found in context
@@ -37,6 +37,9 @@ export const ChatScreen = (props: ChatScreenProps): JSX.Element => {
 
   const adapterAfterCreate = useCallback(
     async (adapter: ChatAdapter): Promise<ChatAdapter> => {
+      adapter.on('participantsAdded', (listener) => {
+         console.log("added");
+      });
       adapter.on('participantsRemoved', (listener) => {
         const removedParticipantIds = listener.participantsRemoved.map((p) => toFlatCommunicationIdentifier(p.id));
         if (removedParticipantIds.includes(userId)) {
@@ -79,8 +82,8 @@ export const ChatScreen = (props: ChatScreenProps): JSX.Element => {
         (emoji) =>
           new Promise((resolve) => {
             return resolve({
-              imageInitials: emoji,
-              initialsColor: getBackgroundColor(emoji)?.backgroundColor
+              imageInitials: USER,
+              initialsColor: getBackgroundColor('USER')?.backgroundColor
             });
           })
       );

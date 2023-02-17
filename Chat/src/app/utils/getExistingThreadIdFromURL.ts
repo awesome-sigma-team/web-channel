@@ -16,3 +16,10 @@ export const getExistingThreadIdFromURL = (): string | null => {
 
   return threadId;
 };
+
+export const getUserNameFromURL = (): string | null => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const name = urlParams.get('user');
+
+  return name;
+};

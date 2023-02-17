@@ -16,7 +16,7 @@ export const createThread = async (topicName?: string): Promise<string> => {
   const chatClient = new ChatClient(getEndpoint(), credential);
 
   const request: CreateChatThreadRequest = {
-    topic: topicName ?? 'Your Chat sample'
+    topic: topicName ?? 'Sigma Chat POC'
   };
   const options: CreateChatThreadOptions = {
     participants: [
