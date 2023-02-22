@@ -10,7 +10,7 @@ products:
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fcommunication-services-web-chat-hero%2Fmain%2Fdeploy%2Fazuredeploy.json)
 
-# Group Chat Sample
+# Group Chat
 
 ## Overview
 
@@ -18,12 +18,7 @@ This is a sample application to show how we can use the `@azure/communication-re
 Learn more about the [Azure Communication Services UI Library](https://azure.github.io/communication-ui-library/). 
 The client-side application is a React based user interface. Alongside this front-end is a NodeJS web application powered by ExpressJS that performs functionality like minting new user tokens for each chat participant.
 
-Additional documentation for this sample can be found on [Microsoft Docs](https://docs.microsoft.com/en-us/azure/communication-services/samples/chat-hero-sample).
-
-![Homepage](./Chat/Media/homepage-sample-chat.png)
-
-## ❤️ Feedback
-We appreciate your feedback and energy helping us improve our services. [Please let us know if you are satisfied with ACS through this survey](https://microsoft.qualtrics.com/jfe/form/SV_5dtYL81xwHnUVue). 
+Additional documentation for this app can be found on [Microsoft Docs](https://docs.microsoft.com/en-us/azure/communication-services/samples/chat-hero-sample).
 
 ## Prerequisites
 
