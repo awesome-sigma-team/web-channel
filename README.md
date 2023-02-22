@@ -63,6 +63,10 @@ Additional documentation for this app can be found on [Microsoft Docs](https://d
 3. `npm run package`
 4. Use the [Azure extension](https://code.visualstudio.com/docs/azure/extensions) and deploy the `Chat/dist` directory to your app service
 
+## Usage
+Copy the websdk url from console and add customer name in the url and give it to user in the chat.
+ex: sigma-chat-poc.azurewebsites.net?user=John 
+
 ## Additional Reading
 
 - [Azure Communication Services - UI Library](https://azure.github.io/communication-ui-library/) - To learn more about what the `@azure/communication-react` package offers.
